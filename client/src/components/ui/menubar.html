@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Menubar</title>
+    <style>
+        /* Core Styles */
+        .menubar {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            display: flex;
+            height: 36px;
+            padding: 4px;
+            gap: 4px;
+            font-family: -apple-system, sans-serif;
+        }
+
+        /* Menu Trigger Button */
+        .menubar-trigger {
+            align-items: center;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 4px 8px;
+            transition: background 0.2s;
+        }
+        .menubar-trigger:hover {
+            background: #f1f5f9;
+        }
+        .menubar-trigger[data-state="open"] {
+            background: #f1f5f9;
+        }
+
+        /* Dropdown Menu */
+        .menubar-content {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            display: none;
+            min-width: 160px;
+            padding: 4px;
+            position: absolute;
+            z-index: 100;
+        }
+        .menubar-content[data-state="open"] {
+            display: block;
+            animation: fadeIn 0.1s ease-out;
+        }
+
+        /* Menu Items */
+        .menubar-item {
+            align-items: center;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            font-size: 14px;
+            gap: 8px;
+            padding: 6px 8px;
+            position: relative;
+            user-select: none;
+        }
+        .menubar-item:hover {
+            background: #f1f5f9;
+        }
+        .menubar-item[data-disabled] {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Icons */
+        .menubar-icon {
+            height: 16px;
+            width: 16px;
+        }
+
+        /* Submenu Arrow */
+        .menubar-sub-trigger::after {
+            content: "→";
+            margin-left: auto;
+            opacity: 0.5;
+        }
+
+        /* Checkbox/Radio Items */
+        .menubar-checkbox-item,
+        .menubar-radio-item {
+            padding-left: 24px;
+        }
+        .menubar-checkbox-item::before,
+        .menubar-radio-item::before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            border: 1px solid #94a3b8;
+        }
+        .menubar-checkbox-item::before {
+            border-radius: 2px;
+        }
+        .menubar-radio-item::before {
+            border-radius: 50%;
+        }
+        .menubar-checkbox-item[aria-checked="true"]::before,
+        .menubar-radio-item[aria-checked="true"]::before {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-2px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Demo Container */
+        .container {
+            padding: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menubar">
+            <!-- File Menu -->
+            <div class="menubar-menu">
+                <button class="menubar-trigger">File</button>
+                <div class="menubar-content">
+                    <div class="menubar-item">
+                        <span>New File</span>
+                        <span style="margin-left: auto; font-size: 12px; opacity: 0.6;">⌘N</span>
+                    </div>
+                    <div class="menubar-item">Open</div>
+                    <div style="height: 1px; background: #e2e8f0; margin: 4px 0;"></div>
+                    <div class="menubar-item">Save</div>
+                    <div class="menubar-item">Save As...</div>
+                </div>
+            </div>
+
+            <!-- Edit Menu -->
+            <div class="menubar-menu">
+                <button class="menubar-trigger">Edit</button>
+                <div class="menubar-content">
+                    <div class="menubar-item">Undo</div>
+                    <div class="menubar-item">Redo</div>
+                    <div style="height: 1px; background: #e2e8f0; margin: 4px 0;"></div>
+                    <div class="menubar-item">Cut</div>
+                    <div class="menubar-item">Copy</div>
+                    <div class="menubar-item">Paste</div>
+                </div>
+            </div>
+
+            <!-- View Menu with Submenus -->
+            <div class="menubar-menu">
+                <button class="menubar-trigger">View</button>
+                <div class="menubar-content">
+                    <div class="menubar-item">Zoom In</div>
+                    <div class="menubar-item">Zoom Out</div>
+                    <div style="height: 1px; background: #e2e8f0; margin: 4px 0;"></div>
+                    
+                    <!-- Submenu Example -->
+                    <div class="menubar-item menubar-sub-trigger">
+                        <span>Appearance</span>
+                    </div>
+                    <div class="menubar-content" style="left: 100%; top: 0;">
+                        <div class="menubar-radio-item" aria-checked="true">Light</div>
+                        <div class="menubar-radio-item" aria-checked="false">Dark</div>
+                        <div class="menubar-radio-item" aria-checked="false">System</div>
+                    </div>
+                    
+                    <!-- Checkbox Example -->
+                    <div class="menubar-checkbox-item" aria-checked="true">Status Bar</div>
+                    <div class="menubar-checkbox-item" aria-checked="false">Sidebar</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menu toggle functionality
+        document.querySelectorAll('.menubar-trigger').forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const menu = trigger.nextElementSibling;
+                const isOpen = menu.style.display === 'block';
+                
+                // Close all other menus
+                document.querySelectorAll('.menubar-content').forEach(content => {
+                    if (content !== menu) {
+                        content.style.display = 'none';
+                        content.previousElementSibling.setAttribute('data-state', 'closed');
+                    }
+                });
+                
+                // Toggle current menu
+                menu.style.display = isOpen ? 'none' : 'block';
+                trigger.setAttribute('data-state', isOpen ? 'closed' : 'open');
+            });
+        });
+
+        // Close menus when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.menubar-content').forEach(content => {
+                content.style.display = 'none';
+                content.previousElementSibling.setAttribute('data-state', 'closed');
+            });
+        });
+
+        // Checkbox items
+        document.querySelectorAll('.menubar-checkbox-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const isChecked = item.getAttribute('aria-checked') === 'true';
+                item.setAttribute('aria-checked', !isChecked);
+            });
+        });
+
+        // Radio items
+        document.querySelectorAll('.menubar-radio-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const menu = item.closest('.menubar-content');
+                menu.querySelectorAll('.menubar-radio-item').forEach(radio => {
+                    radio.setAttribute('aria-checked', 'false');
+                });
+                item.setAttribute('aria-checked', 'true');
+            });
+        });
+
+        // Submenu hover behavior
+        document.querySelectorAll('.menubar-sub-trigger').forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => {
+                const submenu = trigger.nextElementSibling;
+                submenu.style.display = 'block';
+            });
+            
+            trigger.parentElement.addEventListener('mouseleave', () => {
+                const submenu = trigger.nextElementSibling;
+                submenu.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

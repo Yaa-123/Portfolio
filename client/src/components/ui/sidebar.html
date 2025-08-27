@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Component</title>
+    <style>
+        :root {
+            --sidebar-width: 16rem;
+            --sidebar-width-icon: 3rem;
+            --sidebar-width-mobile: 18rem;
+            --sidebar-border: 0, 0%, 89%;
+            --sidebar-accent: 0, 0%, 96%;
+            --sidebar-accent-foreground: 0, 0%, 13%;
+            --sidebar-foreground: 0, 0%, 13%;
+            --sidebar-ring: 0, 0%, 89%;
+            --spacing: 1rem;
+            --skeleton-width: 70%;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        /* Sidebar Wrapper */
+        [data-slot="sidebar-wrapper"] {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+        
+        /* Main Sidebar */
+        [data-slot="sidebar"] {
+            background-color: hsl(var(--sidebar-bg, 0, 0%, 100%));
+            color: hsl(var(--sidebar-foreground));
+            display: flex;
+            height: 100%;
+            width: var(--sidebar-width);
+            flex-direction: column;
+        }
+        
+        /* Mobile Sidebar */
+        [data-mobile="true"][data-slot="sidebar"] {
+            width: var(--sidebar-width-mobile);
+            padding: 0;
+        }
+        
+        /* Sidebar Content */
+        [data-slot="sidebar-content"] {
+            display: flex;
+            flex: 1 1 0%;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow: auto;
+            min-height: 0;
+        }
+        
+        /* Sidebar Header/Footer */
+        [data-slot="sidebar-header"],
+        [data-slot="sidebar-footer"] {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.5rem;
+        }
+        
+        /* Sidebar Separator */
+        [data-slot="sidebar-separator"] {
+            background-color: hsl(var(--sidebar-border));
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+            width: auto;
+        }
+        
+        /* Sidebar Group */
+        [data-slot="sidebar-group"] {
+            position: relative;
+            display: flex;
+            width: 100%;
+            min-width: 0;
+            flex-direction: column;
+            padding: 0.5rem;
+        }
+        
+        /* Sidebar Group Label */
+        [data-slot="sidebar-group-label"] {
+            color: hsl(var(--sidebar-foreground) / 0.7);
+            display: flex;
+            height: 2rem;
+            flex-shrink: 0;
+            align-items: center;
+            border-radius: 0.375rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            outline: none;
+            transition: margin 200ms ease-linear, opacity 200ms ease-linear;
+        }
+        
+        /* Sidebar Menu */
+        [data-slot="sidebar-menu"] {
+            display: flex;
+            width: 100%;
+            min-width: 0;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        /* Sidebar Menu Item */
+        [data-slot="sidebar-menu-item"] {
+            position: relative;
+        }
+        
+        /* Sidebar Menu Button */
+        [data-slot="sidebar-menu-button"] {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 0.5rem;
+            overflow: hidden;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            text-align: left;
+            font-size: 0.875rem;
+            outline: none;
+            transition: width 200ms ease-linear, height 200ms ease-linear, padding 200ms ease-linear;
+        }
+        
+        /* Sidebar Menu Button Hover/Active */
+        [data-slot="sidebar-menu-button"]:hover,
+        [data-slot="sidebar-menu-button"]:active,
+        [data-slot="sidebar-menu-button"][data-active="true"] {
+            background-color: hsl(var(--sidebar-accent));
+            color: hsl(var(--sidebar-accent-foreground));
+        }
+        
+        /* Sidebar Menu Action */
+        [data-slot="sidebar-menu-action"] {
+            color: hsl(var(--sidebar-foreground));
+            position: absolute;
+            top: 0.375rem;
+            right: 0.25rem;
+            display: flex;
+            aspect-ratio: 1/1;
+            width: 1.25rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+            padding: 0;
+            outline: none;
+            transition: transform 200ms ease-linear;
+        }
+        
+        /* Sidebar Menu Badge */
+        [data-slot="sidebar-menu-badge"] {
+            color: hsl(var(--sidebar-foreground));
+            pointer-events: none;
+            position: absolute;
+            right: 0.25rem;
+            display: flex;
+            height: 1.25rem;
+            min-width: 1.25rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            user-select: none;
+        }
+        
+        /* Sidebar Submenu */
+        [data-slot="sidebar-menu-sub"] {
+            border-color: hsl(var(--sidebar-border));
+            margin-left: 0.875rem;
+            margin-right: 0.875rem;
+            display: flex;
+            min-width: 0;
+            transform: translateX(1px);
+            flex-direction: column;
+            gap: 0.25rem;
+            border-left-width: 1px;
+            padding-left: 0.625rem;
+            padding-right: 0.625rem;
+            padding-top: 0.125rem;
+            padding-bottom: 0.125rem;
+        }
+        
+        /* Sidebar Submenu Item */
+        [data-slot="sidebar-menu-sub-item"] {
+            position: relative;
+        }
+        
+        /* Sidebar Submenu Button */
+        [data-slot="sidebar-menu-sub-button"] {
+            color: hsl(var(--sidebar-foreground));
+            display: flex;
+            height: 1.75rem;
+            min-width: 0;
+            transform: translateX(-1px);
+            align-items: center;
+            gap: 0.5rem;
+            overflow: hidden;
+            border-radius: 0.375rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            outline: none;
+        }
+        
+        /* Responsive Classes */
+        @media (max-width: 768px) {
+            [data-slot="sidebar"] {
+                display: none;
+            }
+            
+            [data-mobile="true"][data-slot="sidebar"] {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div data-slot="sidebar-wrapper" style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem;">
+        <!-- Sidebar Container -->
+        <div data-slot="sidebar">
+            <!-- Sidebar Header -->
+            <div data-slot="sidebar-header">
+                <h3>Sidebar Title</h3>
+                <input data-slot="sidebar-input" type="text" placeholder="Search...">
+            </div>
+            
+            <!-- Sidebar Separator -->
+            <hr data-slot="sidebar-separator">
+            
+            <!-- Sidebar Content -->
+            <div data-slot="sidebar-content">
+                <!-- Sidebar Group -->
+                <div data-slot="sidebar-group">
+                    <div data-slot="sidebar-group-label">Navigation</div>
+                    <div data-slot="sidebar-group-content">
+                        <!-- Sidebar Menu -->
+                        <ul data-slot="sidebar-menu">
+                            <!-- Menu Item -->
+                            <li data-slot="sidebar-menu-item">
+                                <button data-slot="sidebar-menu-button" data-active="true">
+                                    <span>Dashboard</span>
+                                </button>
+                            </li>
+                            
+                            <!-- Another Menu Item -->
+                            <li data-slot="sidebar-menu-item">
+                                <button data-slot="sidebar-menu-button">
+                                    <span>Projects</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Another Sidebar Group -->
+                <div data-slot="sidebar-group">
+                    <div data-slot="sidebar-group-label">Settings</div>
+                    <div data-slot="sidebar-group-content">
+                        <!-- Sidebar Menu -->
+                        <ul data-slot="sidebar-menu">
+                            <!-- Menu Item -->
+                            <li data-slot="sidebar-menu-item">
+                                <button data-slot="sidebar-menu-button">
+                                    <span>Account</span>
+                                </button>
+                            </li>
+                            
+                            <!-- Menu Item with Submenu -->
+                            <li data-slot="sidebar-menu-item">
+                                <button data-slot="sidebar-menu-button">
+                                    <span>Preferences</span>
+                                </button>
+                                <!-- Submenu -->
+                                <ul data-slot="sidebar-menu-sub">
+                                    <li data-slot="sidebar-menu-sub-item">
+                                        <a data-slot="sidebar-menu-sub-button" href="#">Theme</a>
+                                    </li>
+                                    <li data-slot="sidebar-menu-sub-item">
+                                        <a data-slot="sidebar-menu-sub-button" href="#">Notifications</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar Footer -->
+            <div data-slot="sidebar-footer">
+                <button data-slot="sidebar-menu-button">
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <main data-slot="sidebar-inset">
+            <h1>Main Content</h1>
+            <p>This is where your main content would go.</p>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Radio Group Component</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --destructive: #ef4444;
+            --destructive-hover: #dc2626;
+            --border: #e2e8f0;
+            --disabled: #94a3b8;
+            --background: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --border: #374151;
+            --background: #1f2937;
+            --text: #f9fafb;
+            --text-muted: #9ca3af;
+        }
+
+        body {
+            font-family: -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            background: #f8fafc;
+            color: var(--text);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* Radio Group */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .radio-group.horizontal {
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Radio Item */
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        /* Radio Input */
+        .radio-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: var(--background);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        /* Size Variants */
+        .radio-input.sm {
+            width: 14px;
+            height: 14px;
+        }
+        .radio-input.lg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* States */
+        .radio-input:checked {
+            border-color: var(--primary);
+        }
+        .radio-input:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .radio-input:disabled {
+            background: rgba(148, 163, 184, 0.3);
+            cursor: not-allowed;
+        }
+        .radio-input[aria-invalid="true"] {
+            border-color: var(--destructive);
+        }
+        .radio-input[aria-invalid="true"]:focus-visible {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Indicator (Dot) */
+        .radio-input:checked::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: var(--primary);
+        }
+        .radio-input:checked::after {
+            width: 8px;
+            height: 8px;
+        }
+        .radio-input.sm:checked::after {
+            width: 6px;
+            height: 6px;
+        }
+        .radio-input.lg:checked::after {
+            width: 10px;
+            height: 10px;
+        }
+        .radio-input[aria-invalid="true"]:checked::after {
+            background: var(--destructive);
+        }
+
+        /* Label */
+        .radio-label {
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .radio-input:disabled + .radio-label {
+            color: var(--disabled);
+            cursor: not-allowed;
+        }
+
+        /* Complex Label Layout */
+        .radio-item.complex .radio-label {
+            display: flex;
+            flex-direction: column;
+        }
+        .radio-item.complex .label-title {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        .radio-item.complex .label-description {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Color Variants */
+        .radio-input.success:checked {
+            border-color: #10b981;
+        }
+        .radio-input.success:checked::after {
+            background: #10b981;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Output */
+        .output {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Enhanced Radio Group</h2>
+        
+        <div class="controls">
+            <button id="toggleLayout">Toggle Horizontal Layout</button>
+            <button id="toggleTheme">Toggle Dark Mode</button>
+            <button id="toggleDisabled">Toggle Disabled State</button>
+            <button id="setThird">Select Third Option</button>
+        </div>
+
+        <!-- Radio Group -->
+        <div class="radio-group" id="radioGroup" role="radiogroup">
+            <!-- Standard Option -->
+            <div class="radio-item">
+                <input type="radio" class="radio-input" id="option1" name="radioGroup" value="option1" checked>
+                <label for="option1" class="radio-label">Standard option</label>
+            </div>
+
+            <!-- Small Size -->
+            <div class="radio-item">
+                <input type="radio" class="radio-input sm" id="option2" name="radioGroup" value="option2">
+                <label for="option2" class="radio-label">Small size option</label>
+            </div>
+
+            <!-- Large Size -->
+            <div class="radio-item">
+                <input type="radio" class="radio-input lg" id="option3" name="radioGroup" value="option3">
+                <label for="option3" class="radio-label">Large size option</label>
+            </div>
+
+            <!-- Complex Label -->
+            <div class="radio-item complex">
+                <input type="radio" class="radio-input" id="option4" name="radioGroup" value="option4">
+                <label for="option4" class="radio-label">
+                    <span class="label-title">Complex option</span>
+                    <span class="label-description">With description text</span>
+                </label>
+            </div>
+
+            <!-- Color Variant -->
+            <div class="radio-item">
+                <input type="radio" class="radio-input success" id="option5" name="radioGroup" value="option5">
+                <label for="option5" class="radio-label">Success variant</label>
+            </div>
+
+            <!-- Invalid State -->
+            <div class="radio-item">
+                <input type="radio" class="radio-input" id="option6" name="radioGroup" value="option6" aria-invalid="true">
+                <label for="option6" class="radio-label">Invalid state</label>
+            </div>
+
+            <!-- Disabled State -->
+            <div class="radio-item">
+                <input type="radio" class="radio-input" id="option7" name="radioGroup" value="option7" disabled>
+                <label for="option7" class="radio-label">Disabled state</label>
+            </div>
+        </div>
+
+        <div class="output">
+            <strong>Selected value:</strong> <span id="selectedValue">option1</span>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const radioGroup = document.getElementById('radioGroup');
+        const toggleLayout = document.getElementById('toggleLayout');
+        const toggleTheme = document.getElementById('toggleTheme');
+        const toggleDisabled = document.getElementById('toggleDisabled');
+        const setThird = document.getElementById('setThird');
+        const selectedValue = document.getElementById('selectedValue');
+        const allRadios = document.querySelectorAll('.radio-input');
+
+        // Toggle layout
+        toggleLayout.addEventListener('click', () => {
+            radioGroup.classList.toggle('horizontal');
+        });
+
+        // Toggle theme
+        toggleTheme.addEventListener('click', () => {
+            document.body.setAttribute('data-theme', 
+                document.body.hasAttribute('data-theme') ? '' : 'dark');
+        });
+
+        // Toggle disabled
+        toggleDisabled.addEventListener('click', () => {
+            const inputs = document.querySelectorAll('.radio-input:not([value="option7"])');
+            inputs.forEach(input => {
+                input.disabled = !input.disabled;
+                const label = input.nextElementSibling;
+                if (input.disabled) {
+                    label.style.color = 'var(--disabled)';
+                    label.style.cursor = 'not-allowed';
+                } else {
+                    label.style.color = '';
+                    label.style.cursor = '';
+                }
+            });
+        });
+
+        // Set third option
+        setThird.addEventListener('click', () => {
+            document.getElementById('option3').checked = true;
+            updateSelectedValue();
+        });
+
+        // Track selected value
+        function updateSelectedValue() {
+            const selected = document.querySelector('.radio-input:checked');
+            if (selected) {
+                selectedValue.textContent = selected.value;
+                console.log('Selected:', selected.value);
+            }
+        }
+
+        allRadios.forEach(radio => {
+            radio.addEventListener('change', updateSelectedValue);
+        });
+
+        // Initialize
+        updateSelectedValue();
+    </script>
+</body>
+</html>

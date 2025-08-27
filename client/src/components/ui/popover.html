@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popover Component</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --popover-bg: #fff;
+            --popover-text: #1e293b;
+            --popover-border: #e2e8f0;
+            --popover-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f8fafc;
+        }
+
+        /* Popover Trigger */
+        .popover-trigger {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .popover-trigger:hover {
+            background: #2563eb;
+        }
+
+        /* Popover Content */
+        .popover-content {
+            position: absolute;
+            background: var(--popover-bg);
+            color: var(--popover-text);
+            border: 1px solid var(--popover-border);
+            border-radius: 6px;
+            padding: 16px;
+            width: 288px;
+            box-shadow: var(--popover-shadow);
+            z-index: 50;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        .popover-content[data-state="open"] {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        /* Animation Classes */
+        .animate-in {
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .animate-out {
+            animation: fadeOut 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(4px) scale(0.95); }
+        }
+
+        /* Position Classes */
+        .side-top {
+            transform-origin: center bottom;
+            margin-bottom: 8px;
+        }
+        .side-bottom {
+            transform-origin: center top;
+            margin-top: 8px;
+        }
+        .side-left {
+            transform-origin: right center;
+            margin-right: 8px;
+        }
+        .side-right {
+            transform-origin: left center;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div style="position: relative; text-align: center;">
+        <!-- Trigger Button -->
+        <button class="popover-trigger" id="trigger">
+            Show Popover
+        </button>
+
+        <!-- Popover Content -->
+        <div class="popover-content" id="popover" data-side="bottom">
+            <h3 style="margin-top: 0;">Popover Title</h3>
+            <p>This is the popover content. It appears when the button is clicked.</p>
+        </div>
+    </div>
+
+    <script>
+        const trigger = document.getElementById('trigger');
+        const popover = document.getElementById('popover');
+        let isOpen = false;
+
+        // Toggle popover visibility
+        function togglePopover() {
+            isOpen = !isOpen;
+            
+            if (isOpen) {
+                popover.setAttribute('data-state', 'open');
+                popover.classList.add('animate-in');
+                popover.classList.remove('animate-out');
+                positionPopover();
+            } else {
+                popover.classList.add('animate-out');
+                popover.classList.remove('animate-in');
+                setTimeout(() => {
+                    popover.setAttribute('data-state', 'closed');
+                }, 200);
+            }
+        }
+
+        // Position popover based on trigger
+        function positionPopover() {
+            const triggerRect = trigger.getBoundingClientRect();
+            const popoverRect = popover.getBoundingClientRect();
+            const side = popover.getAttribute('data-side') || 'bottom';
+            
+            // Reset all position classes
+            popover.classList.remove('side-top', 'side-bottom', 'side-left', 'side-right');
+            popover.classList.add(`side-${side}`);
+            
+            // Calculate position
+            let left, top;
+            
+            switch(side) {
+                case 'top':
+                    left = triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2);
+                    top = triggerRect.top - popoverRect.height - 4;
+                    break;
+                case 'bottom':
+                    left = triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2);
+                    top = triggerRect.bottom + 4;
+                    break;
+                case 'left':
+                    left = triggerRect.left - popoverRect.width - 4;
+                    top = triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2);
+                    break;
+                case 'right':
+                    left = triggerRect.right + 4;
+                    top = triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2);
+                    break;
+            }
+            
+            // Apply position
+            popover.style.left = `${left}px`;
+            popover.style.top = `${top}px`;
+        }
+
+        // Event Listeners
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            togglePopover();
+        });
+
+        document.addEventListener('click', () => {
+            if (isOpen) {
+                togglePopover();
+            }
+        });
+
+        popover.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        window.addEventListener('resize', () => {
+            if (isOpen) {
+                positionPopover();
+            }
+        });
+    </script>
+</body>
+</html>

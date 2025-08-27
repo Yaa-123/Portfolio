@@ -1,0 +1,21 @@
+{
+    // Enable format on save for better code consistency
+    "editor.formatOnSave": true, // Automatically formats your code every time you save a file
+
+    // Set default formatter to Prettier if installed
+    "editor.defaultFormatter": "esbenp.prettier-vscode", // Uses Prettier as the default code formatter
+
+    // Enable emmet support for jsx files
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact",
+        "typescript": "typescriptreact"
+    }, // Enables Emmet abbreviations in JavaScript and TypeScript files as if they were React files
+
+    // Exclude node_modules from search results
+    "search.exclude": {
+        "**/node_modules": true
+    }, // Hides node_modules folder from search results
+
+    // Enable auto save
+    "files.autoSave": "onFocusChange" // Automatically saves files when you switch focus to another file or window
+}

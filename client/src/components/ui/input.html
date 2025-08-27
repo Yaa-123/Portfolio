@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Input</title>
+    <style>
+        .input {
+            /* Base styles */
+            font-family: inherit;
+            height: 36px;
+            width: 100%;
+            min-width: 0;
+            border-radius: 6px;
+            border: 1px solid #d1d5db; /* Default border color */
+            padding: 0 12px;
+            font-size: 14px;
+            background-color: #f9fafb;
+            transition: color 0.15s, box-shadow 0.15s;
+            outline: none;
+            
+            /* File input styles */
+            line-height: 1.5;
+        }
+        
+        .input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .input[aria-invalid="true"] {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+        
+        .input:disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* File input specific styles */
+        .input[type="file"] {
+            padding: 0;
+            border: none;
+            background: transparent;
+        }
+        
+        .input[type="file"]::file-selector-button {
+            height: 28px;
+            border: 0;
+            background: transparent;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <h2>Input Examples</h2>
+        
+        <!-- Regular text input -->
+        <input 
+            type="text" 
+            class="input" 
+            placeholder="Enter your name"
+            aria-label="Name input"
+        >
+        
+        <!-- File input -->
+        <input 
+            type="file" 
+            class="input" 
+            aria-label="File input"
+            style="margin-top: 16px;"
+        >
+        
+        <!-- Invalid state -->
+        <input 
+            type="text" 
+            class="input" 
+            aria-invalid="true"
+            value="Invalid input"
+            style="margin-top: 16px;"
+        >
+        
+        <!-- Disabled state -->
+        <input 
+            type="text" 
+            class="input" 
+            disabled
+            placeholder="Disabled input"
+            style="margin-top: 16px;"
+        >
+    </form>
+</body>
+</html>

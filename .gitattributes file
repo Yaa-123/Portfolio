@@ -1,0 +1,72 @@
+# Set default behavior to automatically normalize line endings
+
+- text=auto
+
+# Force LF line endings for these text files (Unix-style)
+
+_.js text eol=lf
+_.jsx text eol=lf
+_.ts text eol=lf
+_.tsx text eol=lf
+_.json text eol=lf
+_.html text eol=lf
+_.css text eol=lf
+_.scss text eol=lf
+_.sass text eol=lf
+_.less text eol=lf
+_.md text eol=lf
+_.txt text eol=lf
+_.yml text eol=lf
+_.yaml text eol=lf
+_.xml text eol=lf
+_.svg text eol=lf
+
+# Force CRLF line endings for Windows-specific files
+
+_.bat text eol=crlf
+_.cmd text eol=crlf
+\*.ps1 text eol=crlf
+
+# Explicitly declare binary files to prevent modification
+
+_.png binary
+_.jpg binary
+_.jpeg binary
+_.gif binary
+_.ico binary
+_.bmp binary
+_.tiff binary
+_.woff binary
+_.woff2 binary
+_.ttf binary
+_.eot binary
+_.otf binary
+_.pdf binary
+_.zip binary
+_.gz binary
+_.tar binary
+_.exe binary
+_.dll binary
+\*.so binary
+
+# Ignore line ending issues in dependencies
+
+node_modules/ -text
+vendor/ -text
+
+# Define diff behavior for specific file types
+
+_.php diff=php
+_.java diff=java
+_.xml diff=xml
+_.css diff=css
+_.js diff=javascript
+_.json diff=json
+\*.html diff=html
+
+# Define merge strategy for certain files
+
+package.json merge=union
+package-lock.json merge=ours
+yarn.lock merge=ours
+\*.min.js merge=ours

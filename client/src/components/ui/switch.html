@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Component</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #3b82f6;
+            --switch-bg: #e2e8f0;
+            --card: #ffffff;
+            --ring: #3b82f6;
+            --disabled: #94a3b8;
+        }
+
+        body {
+            font-family: -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f8fafc;
+        }
+
+        /* Switch Container */
+        .switch {
+            position: relative;
+            width: 32px;
+            height: 18px;
+            background: var(--switch-bg);
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            outline: none;
+        }
+
+        /* Checked State */
+        .switch[data-state="checked"] {
+            background: var(--primary);
+        }
+
+        /* Thumb */
+        .switch-thumb {
+            display: block;
+            width: 16px;
+            height: 16px;
+            background: var(--card);
+            border-radius: 9999px;
+            transition: transform 0.2s;
+            transform: translateX(0);
+            pointer-events: none;
+        }
+
+        .switch[data-state="checked"] .switch-thumb {
+            transform: translateX(14px);
+        }
+
+        /* Focus State */
+        .switch:focus-visible {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Disabled State */
+        .switch:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Demo Container */
+        .demo-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Label */
+        .switch-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Basic Switch -->
+        <label class="switch-label">
+            <button class="switch" id="switch1" role="switch" aria-checked="false">
+                <span class="switch-thumb"></span>
+            </button>
+            <span>Basic Switch</span>
+        </label>
+
+        <!-- Checked by Default -->
+        <label class="switch-label">
+            <button class="switch" id="switch2" role="switch" aria-checked="true" data-state="checked">
+                <span class="switch-thumb"></span>
+            </button>
+            <span>Checked by Default</span>
+        </label>
+
+        <!-- Disabled Switch -->
+        <label class="switch-label">
+            <button class="switch" id="switch3" role="switch" aria-checked="false" disabled>
+                <span class="switch-thumb"></span>
+            </button>
+            <span>Disabled Switch</span>
+        </label>
+    </div>
+
+    <script>
+        // Toggle switch functionality
+        document.querySelectorAll('.switch:not(:disabled)').forEach(switchEl => {
+            switchEl.addEventListener('click', function() {
+                const isChecked = this.getAttribute('aria-checked') === 'true';
+                this.setAttribute('aria-checked', !isChecked);
+                this.setAttribute('data-state', !isChecked ? 'checked' : 'unchecked');
+                console.log(`Switch ${this.id} is now ${!isChecked ? 'on' : 'off'}`);
+            });
+        });
+
+        // Keyboard support
+        document.querySelectorAll('.switch').forEach(switchEl => {
+            switchEl.addEventListener('keydown', function(e) {
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

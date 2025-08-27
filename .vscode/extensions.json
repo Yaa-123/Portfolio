@@ -1,0 +1,12 @@
+{
+  // Recommended VS Code extensions for this project
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.auto-close-tag",
+    "eamodio.gitlens",
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss"
+  ]
+}

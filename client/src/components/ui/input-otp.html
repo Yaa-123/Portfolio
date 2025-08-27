@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Input</title>
+    <style>
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            margin: 20px;
+        }
+        
+        .otp-input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .otp-input:focus {
+            outline: 2px solid #3b82f6;
+            border-color: transparent;
+        }
+        
+        .separator {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="otp-container">
+        <input type="text" class="otp-input" maxlength="1" data-index="0">
+        <input type="text" class="otp-input" maxlength="1" data-index="1">
+        <input type="text" class="otp-input" maxlength="1" data-index="2">
+        <div class="separator">-</div>
+        <input type="text" class="otp-input" maxlength="1" data-index="3">
+        <input type="text" class="otp-input" maxlength="1" data-index="4">
+        <input type="text" class="otp-input" maxlength="1" data-index="5">
+    </div>
+
+    <script>
+        const inputs = document.querySelectorAll('.otp-input');
+        
+        inputs.forEach(input => {
+            // Move to next input when a digit is entered
+            input.addEventListener('input', (e) => {
+                if (input.value.length === 1) {
+                    const nextIndex = parseInt(input.dataset.index) + 1;
+                    if (nextIndex < inputs.length) {
+                        inputs[nextIndex].focus();
+                    }
+                }
+            });
+            
+            // Allow backspace to move to previous input
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value.length === 0) {
+                    const prevIndex = parseInt(input.dataset.index) - 1;
+                    if (prevIndex >= 0) {
+                        inputs[prevIndex].focus();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
