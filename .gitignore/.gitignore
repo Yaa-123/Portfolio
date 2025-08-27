@@ -63,3 +63,4 @@ Thumbs.db
 # Coverage directory used by tools like istanbul
 coverage/
 .nyc_output/
+client/node_modules/.cache/
