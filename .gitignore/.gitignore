@@ -11,6 +11,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Cache
+.cache/
+.parcel-cache/
+
 # ================================
 # Environment Variables & Secrets
 # ================================
