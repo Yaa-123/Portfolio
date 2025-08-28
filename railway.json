@@ -1,0 +1,6 @@
+{
+  "build": {
+    "builder": "nixpacks",
+    "buildCommand": "cd client && npm install --legacy-peer-deps && npm run build"
+  }
+}
