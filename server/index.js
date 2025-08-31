@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const bcrypt = require("bcrypt"); // ADD THIS LINE
 require("dotenv").config();
 
 const app = express();
@@ -87,6 +88,53 @@ async function testSupabaseConnection() {
 
 testSupabaseConnection();
 
+// ADD THIS FUNCTION - Create admin user
+async function createAdminUser() {
+  try {
+    // Check if admin already exists first
+    const { data: existingUser, error: checkError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", process.env.ADMIN_EMAIL)
+      .single();
+
+    if (checkError && checkError.code !== "PGRST116") {
+      console.log("Error checking admin user:", checkError.message);
+      return;
+    }
+
+    if (existingUser) {
+      console.log("Admin user already exists");
+      return;
+    }
+
+    // Create admin user if doesn't exist
+    const { data, error } = await supabase
+      .from("users")
+      .insert([
+        {
+          email: process.env.ADMIN_EMAIL,
+          password: await bcrypt.hash(process.env.ADMIN_PASSWORD, 10),
+          role: "admin",
+          is_active: true,
+          created_at: new Date().toISOString(),
+        },
+      ])
+      .select();
+
+    if (error) {
+      console.log("Error creating admin user:", error.message);
+    } else {
+      console.log("Admin user created successfully");
+    }
+  } catch (error) {
+    console.error("Error in createAdminUser:", error.message);
+  }
+}
+
+// Call it once
+createAdminUser();
+
 // Import routes
 const adminRoutes = require("./routes/AdminRoutes");
 const publicRoutes = require("./routes/PublicRoutes");
@@ -118,6 +166,15 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
+// ADD THIS ENDPOINT - Simple test endpoint
+app.get("/api/hello", (req, res) => {
+  res.json({
+    message: "Hello from backend!",
+    timestamp: new Date().toISOString(),
+    status: "success",
+  });
+});
+
 // API info endpoint
 app.get("/api", (_req, res) => {
   res.json({
@@ -128,6 +185,7 @@ app.get("/api", (_req, res) => {
       public: "/api/public",
       auth: "/api/auth",
       health: "/api/health",
+      hello: "/api/hello", // ADD THIS TO THE LIST
     },
     documentation: "https://yourdomain.com/api-docs",
   });
@@ -163,6 +221,7 @@ app.use("/api/*", (req, res) => {
       "/api/public",
       "/api/auth",
       "/api/health",
+      "/api/hello", // ADD THIS TO THE LIST
     ],
   });
 });

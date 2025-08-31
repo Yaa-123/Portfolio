@@ -41,12 +41,19 @@ function App() {
   const [sidebarState, setSidebarState] = useState(
     localStorage.getItem("sidebarState") === "collapsed"
   );
+  const [backendData, setBackendData] = useState(null); // Add this line
 
   // Initialize components when app loads
   useEffect(() => {
     initComponents();
     setupContactForm();
     handleResponsive();
+
+    // Call your backend API - ADD THIS
+    fetch("http://localhost:5000/api/hello")
+      .then((response) => response.json())
+      .then((data) => setBackendData(data.message))
+      .catch((error) => console.error("Error connecting to backend:", error));
 
     // Cleanup function
     return () => {
@@ -239,6 +246,24 @@ function App() {
       <Router>
         <div className="App">
           <Header />
+          {/* Backend connection status - ADD THIS */}
+          {backendData && (
+            <div
+              style={{
+                position: "fixed",
+                top: "10px",
+                right: "10px",
+                background: "green",
+                color: "white",
+                padding: "5px 10px",
+                borderRadius: "5px",
+                fontSize: "12px",
+                zIndex: 1000,
+              }}
+            >
+              ✅ Backend Connected
+            </div>
+          )}
           <main>
             <Routes>
               {/* Public routes */}
